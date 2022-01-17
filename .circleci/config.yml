@@ -1,26 +1,56 @@
-# Use the latest 2.1 version of CircleCI pipeline process engine.
-# See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
-# Define a job to be invoked later in a workflow.
-# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
-  say-hello:
-    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+  build:
+    working_directory: ~/circleci-python
     docker:
-      - image: cimg/base:stable
-    # Add steps to the job
-    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+      - image: "circleci/python:3.9.0"
+    steps:
+      - run: python3 billing_system.py
+  test1:
+    working_directory: ~/circleci-python
+    docker:
+      - image: "circleci/python:3.9.0"
     steps:
       - checkout
-      - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
+      - run: python3 test_billing_system_1.py
+  test2:
+    working_directory: ~/circleci-python
+    docker:
+      - image: "circleci/python:3.9.0"
+    steps:
+      - checkout
+      - run: python3 test_billing_system_2.py
 
-# Invoke jobs via workflows
-# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-  say-hello-workflow:
+  build_and_test:
     jobs:
-      - say-hello
+      - checkout
+      - build
+      - test1:
+          requires:
+            - build
+      - test2:
+          requires:
+            - build
+      - hold:
+        type: approval
+        requires:
+          - test1
+          - test2
+      - build:
+        requires:
+          - hold
+        working_directory: ~/circleci-python
+        steps:
+          - run:
+              name: Creating Dummy Artifacts
+              command: |
+                echo "my artifact file" > /tmp/art-1;
+                mkdir /tmp/artifacts;
+                echo "my artifact files in a dir" > /tmp/artifacts/art-2;
+          - store_artifacts:
+              path: ~/circleci-python
+              destination: artifact-file
+          - store_artifacts:
+              path: /tmp/artifacts
