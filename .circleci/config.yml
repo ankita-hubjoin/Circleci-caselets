@@ -33,6 +33,7 @@ jobs:
       - checkout
       - run: sudo apt update
       - run: sudo apt install rsync grsync 
+      - run: rm -rf .git
       - run: rsync -avr --exclude='/home/circleci/circleci-project-setup/.git' /home/circleci/circleci-project-setup /home/circleci/artifact
       - store_artifacts:
           path: /home/circleci/artifact
