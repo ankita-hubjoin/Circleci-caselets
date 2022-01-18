@@ -46,11 +46,11 @@ workflows:
       - test2:
           requires:
             - build
-      -approval:
-        type: approval
-        requires:
-            - test1
-            - test2
+      - approval:
+          type: approval
+          requires:
+              - test1
+              - test2
       - get_artifact:
           requires:
             - approval
