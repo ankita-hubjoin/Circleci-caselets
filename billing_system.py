@@ -83,8 +83,6 @@ class Bill_App:
 
         self.total_bill = float(self.total_medical_price+self.total_grocery_price+self.total_cold_drinks_price+self.c_tax+self.g_tax+self.c_d_tax)
 
-
-
     def clear_data(self):
         op = 1
         if op > 0:
@@ -127,3 +125,5 @@ class Bill_App:
             self.search_bill = ''
 
 obj = Bill_App()
+obj.clear_data()
+print("Welcome to Star Supermarket!!")
