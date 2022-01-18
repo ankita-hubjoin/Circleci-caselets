@@ -31,15 +31,10 @@ jobs:
       - image: "circleci/python:3.9.0"
     steps:
       - checkout
-      - run: sudo apt update
-      - run: sudo apt install rsync grsync 
       - run: rm -rf .git
-      - run: rsync -avr --exclude='/home/circleci/circleci-project-setup/.git' /home/circleci/circleci-project-setup /home/circleci/artifact
       - store_artifacts:
           path: /home/circleci/artifact
           destination: artifact-file
-      # - store_artifacts:
-      #     path: ~/circleci-project-setup/artifacts
 
 workflows:
   build_and_test:
@@ -51,7 +46,12 @@ workflows:
       - test2:
           requires:
             - build
-      - get_artifact:
-          requires:
+      -approval:
+        type: approval
+        requires:
             - test1
             - test2
+      - get_artifact:
+          requires:
+            - approval
+          
