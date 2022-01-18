@@ -24,6 +24,21 @@ jobs:
       - checkout
       - run: python3 test_billing_system_2.py
 
+  get_artifact:
+    working_directory: ~/circleci-project-setup
+    steps:
+      - run:
+          name: Creating Dummy Artifacts
+          command: |
+            echo "my artifact file" > /circleci-project-setup/art-1;
+            mkdir /circleci-project-setup/artifacts;
+            echo "my artifact files in a dir" > /circleci-project-setup/artifacts/art-2;
+      - store_artifacts:
+          path: /circleci-project-setup/art-1
+          destination: artifact-file
+      - store_artifacts:
+          path: /circleci-project-setup/artifacts
+
 workflows:
   build_and_test:
     jobs:
@@ -34,3 +49,7 @@ workflows:
       - test2:
           requires:
             - build
+      - get_artifact:
+          requires:
+            - test1
+            - test2
