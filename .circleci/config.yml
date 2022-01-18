@@ -33,6 +33,7 @@ jobs:
           name: Creating Dummy Artifacts
           command: |
             mkdir ~/circleci-project-setup/artifacts;
+            cp . ~/circleci-project-setup/artifacts
       - store_artifacts:
           path: ~/circleci-project-setup
           destination: artifact-file
