@@ -10,7 +10,7 @@ jobs:
       - run: sudo chown -R circleci:circleci /usr/local/bin
       - run: sudo chown -R circleci:circleci /usr/local/lib/python3.9/site-packages
       - restore_cache:  # ensure this step occurs *before* installing dependencies
-          key: deps10-{{ .Branch }}-{{ checksum "requirements.txt" }}
+          key: deps11-{{ .Branch }}-{{ checksum "requirements.txt" }}
       - run:
           name: install deps
           command: |  # use pipenv to install dependencies
@@ -18,7 +18,7 @@ jobs:
             pip install -r requirements.txt
       - run: python3 billing_system.py
       - save_cache:
-          key: deps10-{{ .Branch }}-{{ checksum "requirements.txt" }}
+          key: deps11-{{ .Branch }}-{{ checksum "requirements.txt" }}
           paths:
             - "/usr/local/bin"
             - "/usr/local/lib/python3.9/site-packages"
