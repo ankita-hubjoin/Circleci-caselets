@@ -1,8 +1,4 @@
-from tkinter import*
 import random
-import os
-from tkinter import messagebox
-
 
 #===============main=====================
 class Bill_App:

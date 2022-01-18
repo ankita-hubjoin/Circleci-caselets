@@ -1,4 +1,3 @@
-from tkinter import*
 from billing_system import Bill_App
 
 def main():
