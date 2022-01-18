@@ -12,16 +12,16 @@ jobs:
       - restore_cache:  # ensure this step occurs *before* installing dependencies
           key: deps10-{{ .Branch }}-{{ checksum "requirements.txt" }}
       - run:
-        name: install deps
-        command: |  # use pipenv to install dependencies
-          python3 -m pip install --upgrade pip
-          pip install -r requirements.txt
+          name: install deps
+          command: |  # use pipenv to install dependencies
+            python3 -m pip install --upgrade pip
+            pip install -r requirements.txt
       - run: python3 billing_system.py
       - save_cache:
-        key: deps10-{{ .Branch }}-{{ checksum "requirements.txt" }}
-        paths:
-          - "/usr/local/bin"
-          - "/usr/local/lib/python3.9.0/site-packages"
+          key: deps10-{{ .Branch }}-{{ checksum "requirements.txt" }}
+          paths:
+            - "/usr/local/bin"
+            - "/usr/local/lib/python3.9.0/site-packages"
  
   test1:
     working_directory: ~/circleci-project-setup
