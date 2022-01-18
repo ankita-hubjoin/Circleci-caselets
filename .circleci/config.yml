@@ -1,0 +1,56 @@
+version: 2.1
+
+jobs:
+  build:
+    working_directory: ~/circleci-python
+    docker:
+      - image: "circleci/python:3.9.0"
+    steps:
+      - run: python3 billing_system.py
+  test1:
+    working_directory: ~/circleci-python
+    docker:
+      - image: "circleci/python:3.9.0"
+    steps:
+      - checkout
+      - run: python3 test_billing_system_1.py
+  test2:
+    working_directory: ~/circleci-python
+    docker:
+      - image: "circleci/python:3.9.0"
+    steps:
+      - checkout
+      - run: python3 test_billing_system_2.py
+
+workflows:
+  build_and_test:
+    jobs:
+      - checkout
+      - build
+      - test1:
+          requires:
+            - build
+      - test2:
+          requires:
+            - build
+      - hold:
+        type: approval
+        requires:
+          - test1
+          - test2
+      - build:
+        requires:
+          - hold
+        working_directory: ~/circleci-python
+        steps:
+          - run:
+              name: Creating Dummy Artifacts
+              command: |
+                echo "my artifact file" > /tmp/art-1;
+                mkdir /tmp/artifacts;
+                echo "my artifact files in a dir" > /tmp/artifacts/art-2;
+          - store_artifacts:
+              path: ~/circleci-python
+              destination: artifact-file
+          - store_artifacts:
+              path: /tmp/artifacts
