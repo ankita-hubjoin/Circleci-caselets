@@ -419,6 +419,9 @@ class Bill_App:
     def destroy_app(self):
         self.root.destroy()
 
+if os.environ.get('DISPLAY','') == '':
+    print('no display found. Using :0.0')
+    os.environ.__setitem__('DISPLAY', ':0.0')
 
 root = Tk()
 obj = Bill_App(root)
