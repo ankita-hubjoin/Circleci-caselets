@@ -7,6 +7,10 @@ jobs:
       - image: "circleci/python:3.9.0"
     steps:
       - checkout
+      - run:  v /tmp/.X11-unix:/tmp/.X11-unix
+      - run: -e DISPLAY=unix$DISPLAY
+      - run: $ sudo apt-get install x11-xserver-utils
+      - run: $ xhost +
       - run: export MPLBACKEND='Agg'
       - run: python3 billing_system.py
   test1:
