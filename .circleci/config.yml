@@ -34,10 +34,10 @@ jobs:
           command: |
             mkdir ~/circleci-project-setup/artifacts;
       - store_artifacts:
-          path: /circleci-project-setup
+          path: ~/circleci-project-setup
           destination: artifact-file
       - store_artifacts:
-          path: /circleci-project-setup/artifacts
+          path: ~/circleci-project-setup/artifacts
 
 workflows:
   build_and_test:
