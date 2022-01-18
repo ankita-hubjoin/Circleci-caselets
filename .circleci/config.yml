@@ -8,6 +8,7 @@ jobs:
     steps:
       - checkout
       - run: sudo chown -R circleci:circleci /usr/local/bin
+      - run: sudo chown -R circleci:circleci /usr/local/bin/python3.9/site-packages
       - restore_cache:  # ensure this step occurs *before* installing dependencies
           key: deps10-{{ .Branch }}-{{ checksum "requirements.txt" }}
       - run:
@@ -20,6 +21,7 @@ jobs:
           key: deps10-{{ .Branch }}-{{ checksum "requirements.txt" }}
           paths:
             - "/usr/local/bin"
+            - "/usr/local/binpython3.9/site-packages"
  
   test1:
     working_directory: ~/circleci-project-setup
