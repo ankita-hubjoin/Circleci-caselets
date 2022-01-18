@@ -31,6 +31,7 @@ jobs:
       - image: "circleci/python:3.9.0"
     steps:
       - checkout
+      - run: sudo apt install rsync grsync 
       - run: rsync -avr --exclude='/home/circleci/circleci-project-setup/.git' /home/circleci/circleci-project-setup /home/circleci/artifact
       - store_artifacts:
           path: /home/circleci/artifact
