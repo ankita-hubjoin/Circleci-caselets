@@ -31,13 +31,14 @@ jobs:
     docker:
       - image: "circleci/python:3.9.0"
     steps:
+      - checkout
       # - run:
       #     name: Creating Dummy Artifacts
       #     command: |
       #       mkdir ~/circleci-project-setup/artifacts;
       #       cp -r . ~/circleci-project-setup/artifacts
       - store_artifacts:
-          path: /home
+          path: /home/circleci/circleci-project-setup
           destination: artifact-file
       # - store_artifacts:
       #     path: ~/circleci-project-setup/artifacts
