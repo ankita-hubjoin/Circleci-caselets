@@ -37,7 +37,25 @@ jobs:
           destination: artifact-file
 
 workflows:
-  build_and_test:
+  build_and_test1:
+    jobs:
+      - build
+      - test1:
+          requires:
+            - build
+      - test2:
+          requires:
+            - build
+      - approval:
+          type: approval
+          requires:
+              - test1
+              - test2
+      - get_artifact:
+          requires:
+            - approval
+
+  build_and_test2:
     jobs:
       - build
       - test1:
