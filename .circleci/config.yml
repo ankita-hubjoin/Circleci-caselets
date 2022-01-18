@@ -36,7 +36,7 @@ jobs:
       #       mkdir ~/circleci-project-setup/artifacts;
       #       cp -r . ~/circleci-project-setup/artifacts
       - store_artifacts:
-          path: /circleci-project-setup/
+          path: ./circleci-project-setup
       # - store_artifacts:
       #     path: ~/circleci-project-setup/artifacts
 
