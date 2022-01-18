@@ -26,6 +26,8 @@ jobs:
 
   get_artifact:
     working_directory: ~/circleci-project-setup
+    docker:
+      - image: "circleci/python:3.9.0"
     steps:
       - run:
           name: Creating Dummy Artifacts
