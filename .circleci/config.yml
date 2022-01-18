@@ -9,6 +9,9 @@ jobs:
       - checkout
       - run: ls
       - run: python3 billing_system.py
+      - run: cd ..
+      - run: ls
+
   test1:
     working_directory: ~/circleci-project-setup
     docker:
