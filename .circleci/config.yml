@@ -63,11 +63,11 @@ jobs:
           destination: artifact-file
   docker_build:
     working_directory: ~/circleci-project-setup
-      docker:
-        - image: "circleci/python:3.9.0"
-      steps:
-        - checkout
-        - run: docker build
+    docker:
+      - image: "circleci/python:3.9.0"
+    steps:
+      - checkout
+      - run: docker build
 
 workflows:
   build_and_test1:
