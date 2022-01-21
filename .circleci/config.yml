@@ -61,6 +61,13 @@ jobs:
       - store_artifacts:
           path: /home/circleci/artifact
           destination: artifact-file
+  docker_build:
+    working_directory: ~/circleci-project-setup
+      docker:
+        - image: "circleci/python:3.9.0"
+      steps:
+        - checkout
+        - run: docker build
 
 workflows:
   build_and_test1:
@@ -77,25 +84,26 @@ workflows:
           requires:
               - test1
               - test2
-      - get_artifact:
-          requires:
-            - approval
+      - docker_build
+      # - get_artifact:
+      #     requires:
+      #       - approval
 
-  build_and_test2:
-    jobs:
-      - build_cache
-      - test1:
-          requires:
-            - build_cache
-      - test2:
-          requires:
-            - build_cache
-      - approval:
-          type: approval
-          requires:
-              - test1
-              - test2
-      - get_artifact:
-          requires:
-            - approval
+  # build_and_test2:
+  #   jobs:
+  #     - build_cache
+  #     - test1:
+  #         requires:
+  #           - build_cache
+  #     - test2:
+  #         requires:
+  #           - build_cache
+  #     - approval:
+  #         type: approval
+  #         requires:
+  #             - test1
+  #             - test2
+  #     - get_artifact:
+  #         requires:
+  #           - approval
           
