@@ -67,7 +67,7 @@ jobs:
       - image: "circleci/python:3.9.0"
     steps:
       - checkout
-      - run: docker build
+      - run: docker build .
 
 workflows:
   build_and_test1:
