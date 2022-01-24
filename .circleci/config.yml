@@ -61,6 +61,7 @@ jobs:
       - store_artifacts:
           path: /home/circleci/artifact
           destination: artifact-file
+  
   docker_build:
     working_directory: ~/circleci-project-setup
     docker:
@@ -85,9 +86,9 @@ jobs:
             ls
             cd /caches
             ls
-      - store_artifacts:
-          path: /home/circleci/artifact
-          destination: artifact-file
+      # - store_artifacts:
+      #     path: /home/circleci/artifact
+      #     destination: artifact-file
 
 workflows:
   build_and_test1:
