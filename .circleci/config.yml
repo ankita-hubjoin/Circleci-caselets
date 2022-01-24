@@ -87,7 +87,7 @@ jobs:
             cd /caches
             ls
       - store_artifacts:
-          path: /caches/rishab_cci.tar
+          path: /caches
           destination: artifact-file
 
 workflows:
