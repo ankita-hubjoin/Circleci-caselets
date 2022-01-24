@@ -78,8 +78,11 @@ jobs:
       - run: docker build . -t rishab_cci
       - run: docker image ls
       - run:
-          command: | 
-            cd /var/lib/docker/
+          command: |
+            cd ~
+            echo "Root"
+            ls
+            cd /var/lib/
             ls
 
 workflows:
