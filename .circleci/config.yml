@@ -81,7 +81,7 @@ jobs:
           name: Save Docker image layer cache
           command: |
             mkdir -p /caches
-            docker push -o /caches/rishab_cci rishab_cci
+            docker save -o /caches/rishab_cci rishab_cci
       # - store_artifacts:
       #       path: /var/lib/docker/rishab_cci
       #       destination: docker_image
