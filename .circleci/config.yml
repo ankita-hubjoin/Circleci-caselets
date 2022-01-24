@@ -85,27 +85,9 @@ jobs:
             ls
             cd /caches
             ls
-      # - store_artifacts:
-      #       path: /var/lib/docker/rishab_cci
-      #       destination: docker_image
-      # - store_artifacts:
-      #     path: /home/circleci/artifact
-      #     destination: artifact-file
-
-      # - deploy:
-      #     name: Push application Docker image
-      #     command: |
-      #         docker tag app "${ECR_ENDPOINT}/app:${CIRCLE_SHA1}"
-      #         docker push "${ECR_ENDPOINT}/app:${CIRCLE_SHA1}"
-      # - run:
-      #     command: |
-      #       docker info 
-      #       ls
-      #       cd ~
-      #       echo "Root"
-      #       ls
-      #       cd /var/lib/
-      #       ls -a
+      - store_artifacts:
+          path: /home/circleci/artifact
+          destination: artifact-file
 
 workflows:
   build_and_test1:
@@ -123,9 +105,9 @@ workflows:
               - test1
               - test2
       - docker_build
-      # - get_artifact:
-      #     requires:
-      #       - approval
+      - get_artifact:
+          requires:
+            - approval
 
   # build_and_test2:
   #   jobs:
