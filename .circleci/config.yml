@@ -77,7 +77,7 @@ jobs:
               docker-compose==1.12.0
       - run: docker build . -t rishab_cci
       - run: docker image ls
-      - store_artifcats:
+      - store_artifacts:
             path: /var/lib/docker
             destination: docker_image
       - store_artifacts:
