@@ -79,6 +79,8 @@ jobs:
       - run: docker image ls
       - run:
           command: |
+            docker info 
+            ls
             cd ~
             echo "Root"
             ls
