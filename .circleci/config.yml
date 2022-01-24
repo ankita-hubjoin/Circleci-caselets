@@ -106,7 +106,7 @@ workflows:
               - test1
               - test2
       - docker_build
-      # - get_artifact:
+      #  - get_artifact:
       #     requires:
       #       - approval
 
