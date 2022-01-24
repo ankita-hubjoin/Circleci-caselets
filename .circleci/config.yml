@@ -91,7 +91,7 @@ jobs:
             echo "Root"
             ls
             cd /var/lib/
-            ls
+            ls -a
 
 workflows:
   build_and_test1:
