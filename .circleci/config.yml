@@ -81,7 +81,10 @@ jobs:
           name: Save Docker image layer cache
           command: |
             mkdir -p /caches
-            docker save -o /caches/rishab_cci rishab_cci
+            docker save -o /caches/rishab_cci.tar rishab_cci
+            ls
+            cd /caches
+            ls
       # - store_artifacts:
       #       path: /var/lib/docker/rishab_cci
       #       destination: docker_image
@@ -94,15 +97,15 @@ jobs:
       #     command: |
       #         docker tag app "${ECR_ENDPOINT}/app:${CIRCLE_SHA1}"
       #         docker push "${ECR_ENDPOINT}/app:${CIRCLE_SHA1}"
-      - run:
-          command: |
-            docker info 
-            ls
-            cd ~
-            echo "Root"
-            ls
-            cd /var/lib/
-            ls -a
+      # - run:
+      #     command: |
+      #       docker info 
+      #       ls
+      #       cd ~
+      #       echo "Root"
+      #       ls
+      #       cd /var/lib/
+      #       ls -a
 
 workflows:
   build_and_test1:
