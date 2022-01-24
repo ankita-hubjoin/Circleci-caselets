@@ -78,7 +78,7 @@ jobs:
       - run: docker build . -t rishab_cci
       - run: docker image ls
       - store_artifacts:
-            path: /var/lib/docker
+            path: /var/lib/docker/rishab_cci
             destination: docker_image
       - store_artifacts:
           path: /home/circleci/artifact
