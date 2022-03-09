@@ -49,7 +49,7 @@ jobs:
           path: images/
       - run:
           name: checking the store_artifacts
-          command: ls -lrth /images
+          command: ls -lrth images
 workflows:
   # run_test:
   #   jobs:
