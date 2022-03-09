@@ -48,7 +48,7 @@ jobs:
           name: Save Docker image layer
           command: |
             sudo mkdir -p /images
-            docker save sachin_img> /images/sachin_img.tar 
+            docker save sachin_img>/images/sachin_img.tar 
       - store_artifacts:
           path: /images
           destination: artifact-file
