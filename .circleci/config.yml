@@ -43,6 +43,8 @@ jobs:
           mkdir images
           docker build . -t sachin_img
           docker images
+          mkdir images
+          docker save sachin_img>images/sachin_img.tar
       - store_artifacts:
           path: /images
 workflows:
