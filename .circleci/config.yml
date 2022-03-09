@@ -37,10 +37,14 @@ jobs:
       - image: cimg/python:3.10.1
     steps:
       - checkout
-      - run: rm -rf .git
+      - setup_remote_docker
+      - run: |
+          rm -rf .git
+          mkdir images
+          docker build . -t sachin_img
+          docker images
       - store_artifacts:
           path: /images
-          destination: artifact-file
 workflows:
   # run_test:
   #   jobs:
