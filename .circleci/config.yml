@@ -1,22 +1,26 @@
 version: 2.1
 
+commands:
+  install_deps:
+    steps:
+      -command: |  # use pipenv to install dependencies
+          python3 -m pip install --upgrade pip
+          pip install -r requirements.txt
+
 jobs:
   build:
     working_directory: ~/circleci-project-setup
     docker:
-      - image: "circleci/python:3.9.0"
+      - image: "cimg/python:3.10.2"
     steps:
       - checkout
-      - run:
-          name: install deps
-          command: |  # use pipenv to install dependencies
-            python3 -m pip install --upgrade pip
-            pip install -r requirements.txt
+      - install_deps
       - run: python3 billing_system.py
+  
   test1:
     working_directory: ~/circleci-project-setup
     docker:
-      - image: "circleci/python:3.9.0"
+      - image: "cimg/python:3.10.2"
     steps:
       - checkout
       - run: python3 test_billing_system_1.py
@@ -24,7 +28,7 @@ jobs:
   test2:
     working_directory: ~/circleci-project-setup
     docker:
-      - image: "circleci/python:3.9.0"
+      - image: "cimg/python:3.10.2"
     steps:
       - checkout
       - run: python3 test_billing_system_2.py
@@ -41,31 +45,28 @@ jobs:
           command: |
             apk add --no-cache py-pip=9.0.0-r1
             pip install docker-compose==1.12.0
-      - run: docker build . -t rishab_cci
+      - run: docker build . -t rishab_caselet
       - run: docker image ls
       - run: 
           name: Save Docker image layer
           command: |
             mkdir -p /image_folder
-            docker save -o /image_folder/rishab_cci.tar rishab_cci
+            docker save -o /image_folder/rishab_caselet.tar rishab_caselet
       - store_artifacts:
           path: /image_folder
           destination: artifact-file
+  
   build_cache:
     working_directory: ~/circleci-project-setup
     docker:
-      - image: "circleci/python:3.9.0"
+      - image: "cimg/python:3.10.2"
     steps:
       - checkout
       - run: sudo chown -R circleci:circleci /usr/local/bin
       - run: sudo chown -R circleci:circleci /usr/local/lib/python3.9/site-packages
       - restore_cache:  # ensure this step occurs *before* installing dependencies
           key: deps11-{{ .Branch }}-{{ checksum "requirements.txt" }}
-      - run:
-          name: install deps
-          command: |  # use pipenv to install dependencies
-            python3 -m pip install --upgrade pip
-            pip install -r requirements.txt
+      - install_deps
       - run: python3 billing_system.py
       - save_cache:
           key: deps11-{{ .Branch }}-{{ checksum "requirements.txt" }}
@@ -91,6 +92,7 @@ workflows:
       - docker_build:
           requires:
             - approval
+  
   build_and_test_workflow2:
     jobs:
       - build_cache
@@ -103,7 +105,6 @@ workflows:
       - approval:
           type: approval
           requires:
-              - test1
               - test2
       - docker_build:
           requires:
