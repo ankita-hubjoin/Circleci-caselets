@@ -43,21 +43,20 @@ jobs:
           name: Save Docker image layer
           command: |
             sudo mkdir -p /images
-            docker save -o /images/sachin_img.tar sachin_img
       - store_artifacts:
           path: /images
           destination: artifact-file
 workflows:
-  run_test:
-    jobs:
-      - build
-      - approval:
-          type: approval
-          requires:
-            - build
-      - test:
-          requires: 
-            - approval
+  # run_test:
+  #   jobs:
+  #     - build
+  #     - approval:
+  #         type: approval
+  #         requires:
+  #           - build
+  #     - test:
+  #         requires: 
+  #           - approval
   building_artifacts:
     jobs:
       - creating_artifacts
