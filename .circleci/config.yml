@@ -41,11 +41,6 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      # - run:
-      #     name: Install dependencies #installing docker-compose
-      #     command: |
-      #       apk add --no-cache py-pip=9.0.0-r1
-      #       pip install docker-compose==1.12.0
       - run: docker build . -t rishab_caselet #build the image
       - run: docker image ls
       - run: 
@@ -64,7 +59,6 @@ jobs:
     steps:
       - checkout
       - run: sudo chown -R circleci:circleci /usr/local/bin
-      # - run: sudo chown -R circleci:circleci /usr/local/lib/python3.10/site-packages
       - restore_cache:  # ensure this step occurs *before* installing dependencies
           key: deps12-{{ .Branch }}-{{ checksum "requirements.txt" }}
       - install_deps
@@ -73,7 +67,6 @@ jobs:
           key: deps11-{{ .Branch }}-{{ checksum "requirements.txt" }}
           paths:
             - "/usr/local/bin"
-            # - "/usr/local/lib/python3.10/site-packages"
 
 workflows:
   build_and_test_workflow1:
