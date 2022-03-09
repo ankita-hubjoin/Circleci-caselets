@@ -30,7 +30,8 @@ workflows:
   run_test:
     jobs:
       - build
-      - test:
+      - approval:
           type: approval
           requires:
             - build
+      - test
