@@ -32,6 +32,24 @@ jobs:
             python3 -m pip install --upgrade pip
             pip install -r requirements.txt
             python test_billing_system_2.py
+  creating_artifacts:
+    docker:
+      - image: cimg/python:3.10.1
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 19.03.13
+          docker_layer_caching: true
+      - run: docker build . -t sachin_img
+      - run: docker image ls
+      - run:
+          name: Save Docker image layer
+          command: |
+            mkdir -p /images
+            docker save --output /images/sachin_img.tar sachin_img
+      - store_artifacts:
+          path: /images
+          destination: artifact-file
 workflows:
   run_test:
     jobs:
@@ -43,3 +61,6 @@ workflows:
       - test:
           requires: 
             - approval
+  building_artifacts:
+    jobs:
+      - creating_artifacts
