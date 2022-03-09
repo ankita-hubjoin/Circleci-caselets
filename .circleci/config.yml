@@ -22,10 +22,15 @@ jobs:
       - run:
           name: Running tests 1
           command: |
+            python3 -m pip install --upgrade pip
+            pip install -r requirements.txt
             python test_billing_system_1.py
       - run:
           name: Running test 2
-          command: python test_billing_system_2.py
+          command: |
+            python3 -m pip install --upgrade pip
+            pip install -r requirements.txt
+            python test_billing_system_2.py
 workflows:
   run_test:
     jobs:
