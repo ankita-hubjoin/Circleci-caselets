@@ -39,7 +39,7 @@ jobs:
       - checkout
       - setup_remote_docker
       - restore_cache:
-        key: cache-v1-{{ checksum "requirements.txt"}}
+          key: cache-v1-{{ checksum "requirements.txt"}}
       - run: |
           rm -rf .git
           mkdir images
