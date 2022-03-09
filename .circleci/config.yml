@@ -47,6 +47,9 @@ jobs:
           docker save sachin_img>images/sachin_img.tar
       - store_artifacts:
           path: images/
+      - run:
+          name: checking the store_artifacts
+          command: ls -lrth /images
 workflows:
   # run_test:
   #   jobs:
