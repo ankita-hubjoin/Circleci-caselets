@@ -56,9 +56,6 @@ jobs:
       - run:
           name: checking the store_artifacts
           command: ls -lrth images
-      - run: 
-          name: checking the cache file
-          run : ls -lrth /usr/local/bin
 workflows:
   # run_test:
   #   jobs:
