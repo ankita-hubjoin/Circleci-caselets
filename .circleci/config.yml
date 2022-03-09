@@ -19,6 +19,7 @@ jobs:
       - image: cimg/python:3.10.1
     parallelism: 2
     steps:
+      - checkout
       - run:
           name: Running tests 1
           command: |
