@@ -59,16 +59,16 @@ jobs:
           name: checking the store_artifacts
           command: ls -lrth images
 workflows:
-  # run_test:
-  #   jobs:
-  #     - build
-  #     - approval:
-  #         type: approval
-  #         requires:
-  #           - build
-  #     - test:
-  #         requires: 
-  #           - approval
+  run_test:
+    jobs:
+      - build
+      - approval:
+          type: approval
+          requires:
+            - build
+      - test:
+          requires: 
+            - approval
   building_artifacts:
     jobs:
       - creating_artifacts
