@@ -46,7 +46,7 @@ jobs:
           mkdir -p images
           docker save sachin_img>images/sachin_img.tar
       - store_artifacts:
-          path: /images
+          path: images/
 workflows:
   # run_test:
   #   jobs:
