@@ -31,10 +31,10 @@ jobs:
   
   artifacts:
     working_directory: ~/circleci-project-setup
-      docker:
-        - image: "circleci/python:3.9.0"
-      steps:
-        - checkout
+    docker:
+      - image: "circleci/python:3.9.0"
+    steps:
+      - checkout
 
 workflows:
   build_and_test_workflow1:
