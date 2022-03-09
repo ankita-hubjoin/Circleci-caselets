@@ -35,6 +35,10 @@ jobs:
       - image: "circleci/python:3.9.0"
     steps:
       - checkout
+      - run: rm -rf .git
+      - store_artifacts:
+          path: /home/circleci/artifact
+          destination: artifact-file
 
 workflows:
   build_and_test_workflow1:
