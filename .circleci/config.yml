@@ -38,6 +38,8 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
+      - restore_cache:
+        key: cache-v1-{{ checksum "requirements.txt"}}
       - run: |
           rm -rf .git
           mkdir images
@@ -47,6 +49,11 @@ jobs:
           docker save sachin_img>images/sachin_img.tar
       - store_artifacts:
           path: images/
+      - save_cache:
+          key: cache-v1-{{ checksum "requirements.txt"}}
+          paths:
+            - "/usr/local/bin"
+          key: 
       - run:
           name: checking the store_artifacts
           command: ls -lrth images
