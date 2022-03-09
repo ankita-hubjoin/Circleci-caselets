@@ -51,6 +51,27 @@ jobs:
       - store_artifacts:
           path: /image_folder
           destination: artifact-file
+  build_cache:
+    working_directory: ~/circleci-project-setup
+    docker:
+      - image: "circleci/python:3.9.0"
+    steps:
+      - checkout
+      - run: sudo chown -R circleci:circleci /usr/local/bin
+      - run: sudo chown -R circleci:circleci /usr/local/lib/python3.9/site-packages
+      - restore_cache:  # ensure this step occurs *before* installing dependencies
+          key: deps11-{{ .Branch }}-{{ checksum "requirements.txt" }}
+      - run:
+          name: install deps
+          command: |  # use pipenv to install dependencies
+            python3 -m pip install --upgrade pip
+            pip install -r requirements.txt
+      - run: python3 billing_system.py
+      - save_cache:
+          key: deps11-{{ .Branch }}-{{ checksum "requirements.txt" }}
+          paths:
+            - "/usr/local/bin"
+            - "/usr/local/lib/python3.9/site-packages"
 
 workflows:
   build_and_test_workflow1:
@@ -62,6 +83,23 @@ workflows:
       - test2:
           requires:
             - build
+      - approval:
+          type: approval
+          requires:
+              - test1
+              - test2
+      - docker_build:
+          requires:
+            - approval
+  build_and_test_workflow2:
+    jobs:
+      - build_cache
+      - test1:
+          requires:
+            - build_cache
+      - test2:
+          requires:
+            - test1
       - approval:
           type: approval
           requires:
