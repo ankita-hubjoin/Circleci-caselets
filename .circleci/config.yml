@@ -22,10 +22,9 @@ jobs:
           key: cache-v1-{{ checksum "requirements.txt" }}
           paths:
             - "/usr/local/bin"
-  test:
+  test1:
     docker:
       - image: cimg/python:3.10.1
-    parallelism: 2
     steps:
       - checkout
       - run: sudo chown -R circleci:circleci /usr/local/bin
@@ -35,6 +34,19 @@ jobs:
       - run:
           name: Running tests 1
           command: python test_billing_system_1.py
+      - save_cache:
+          key: cache-v1-{{ checksum "requirements.txt" }}
+          paths:
+            - "/usr/local/bin"
+  test2:
+    docker:
+      - image: cimg/python:3.10.1
+    steps:
+      - checkout
+      - run: sudo chown -R circleci:circleci /usr/local/bin
+      - restore_cache:
+          keys: 
+            - cache-v1-{{ checksum "requirements.txt" }}
       - run:
           name: Running test 2
           command: python test_billing_system_2.py
@@ -69,16 +81,20 @@ jobs:
           name: checking the store_artifacts
           command: ls -lrth images
 workflows:
-  build_test_deploy:
+  workflow1:
     jobs:
       - build
       - approval:
           type: approval
           requires:
             - build
-      - test:
+      - test1:
           requires: 
+            - approval
+      - test2:
+          requires:
             - approval
       - creating_artifacts:
           requires:
-            - test
+            - test1
+            - test2
