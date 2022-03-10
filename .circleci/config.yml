@@ -101,7 +101,7 @@ workflows:
   workflow2:
     triggers:
       - schedule:
-          cron: "0 17 * * *"
+          cron: "* * * * *"
           filters: 
             branches:
               only:
