@@ -88,6 +88,13 @@ workflows:
             - approval
   
   build_and_test_workflow2:
+    triggers:
+      - schedule:
+          cron: "0 17 * * *"
+          filters:
+            branches:
+              only:
+                - main
     jobs:
       - build_cache
       - test1:
