@@ -98,27 +98,27 @@ workflows:
           requires:
             - test1
             - test2
-  workflow2:
-    triggers:
-      - schedule:
-          cron: "0 17 * * *"
-          filters:
-            branches:
-              only:
-                - sachin-circleci
-    jobs:
-      - build
-      - approval:
-          type: approval
-          requires:
-            - build
-      - test1:
-          requires: 
-            - approval
-      - test2:
-          requires:
-            - approval
-            - test1
-      - creating_artifacts:
-          requires:
-            - test2
+workflow2:
+  triggers:
+    - schedule:
+        cron: "0 17 * * *"
+        filters:
+          branches:
+            only:
+              - sachin-circleci
+  jobs:
+    - build
+    - approval:
+        type: approval
+        requires:
+          - build
+    - test1:
+        requires: 
+          - approval
+    - test2:
+        requires:
+          - approval
+          - test1
+    - creating_artifacts:
+        requires:
+          - test2
