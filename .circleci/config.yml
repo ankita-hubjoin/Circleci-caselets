@@ -110,7 +110,6 @@ workflows:
             - approval
       - test2:
           requires:
-            - approval
             - test1
       - creating_artifacts:
           requires:
