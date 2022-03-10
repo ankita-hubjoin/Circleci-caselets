@@ -102,6 +102,10 @@ workflows:
     triggers:
       - schedule:
           cron: "0 17 * * *"
+          filters: 
+            branches:
+              only:
+                - sachin-circleci
     jobs:
       - build
       - approval:
