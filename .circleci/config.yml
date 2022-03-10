@@ -84,20 +84,20 @@ workflows:
   workflow1:
     jobs:
       - build
+      - test1:
+          requires: 
+            - build
+      - test2:
+          requires:
+            - build
       - approval:
           type: approval
           requires:
-            - build
-      - test1:
-          requires: 
-            - approval
-      - test2:
-          requires:
-            - approval
-      - creating_artifacts:
-          requires:
             - test1
             - test2
+      - creating_artifacts:
+          requires:
+            - approval
   workflow2:
     triggers:
       - schedule:
@@ -108,16 +108,16 @@ workflows:
                 - sachin_circleci
     jobs:
       - build
-      - approval:
-          type: approval
-          requires:
-            - build
       - test1:
           requires: 
-            - approval
+            - build
       - test2:
           requires:
             - test1
-      - creating_artifacts:
+      - approval:
+          type: approval
           requires:
             - test2
+      - creating_artifacts:
+          requires:
+            - approval
