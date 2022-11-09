@@ -41,7 +41,6 @@ workflows:
           requires:
             - execute-main
       - publish-artifact:
-          type: approval
           requires:
             - execute-test-1
             - execute-test-2
