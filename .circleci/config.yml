@@ -21,9 +21,9 @@ jobs:
       - image: python 
     steps:
       - checkout 
-      - run: tar -cvzf first-artifact.tar .
+      - run: tar -cvzf /tmp/first-artifact.tar .
       - store_artifacts:
-          path: first-artifact.tar
+          path: /tmp/first-artifact.tar
 
 workflows:
   first-workflow:
