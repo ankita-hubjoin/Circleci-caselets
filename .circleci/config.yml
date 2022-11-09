@@ -23,9 +23,11 @@ workflows:
       - execute-main 
       - execute-test: 
           test-file: test_billing_system_1.py
+          type: approval
           requires:
             - execute-main
       - execute-test: 
           test-file: test_billing_system_2.py
+          type: approval
           requires:
             - execute-main
