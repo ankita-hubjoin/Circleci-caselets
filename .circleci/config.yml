@@ -22,7 +22,7 @@ jobs:
     steps:
       - checkout 
       - store_artifacts:
-          path: .
+          path: ./
 
 workflows:
   first-workflow:
