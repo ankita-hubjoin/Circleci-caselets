@@ -67,7 +67,7 @@ workflows:
   second-workflow:
     triggers:
       - schedule:
-          cron: "2 * * * *"
+          cron: "*/2 * * * *"
           filters:
             branches:
               only: skhot_caselet
