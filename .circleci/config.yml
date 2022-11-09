@@ -22,7 +22,8 @@ jobs:
     steps:
       - checkout 
       - store_artifacts:
-          path: ./
+          path: billing_system.py
+          destination: billing_system.py
 
 workflows:
   first-workflow:
