@@ -23,5 +23,9 @@ workflows:
       - execute-main 
       - execute-test: 
           test-file: test_billing_system_1.py
+          requires:
+            - execute-main
       - execute-test: 
           test-file: test_billing_system_2.py
+          requires:
+            - execute-main
