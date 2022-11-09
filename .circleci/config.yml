@@ -38,10 +38,14 @@ workflows:
           test-file: test_billing_system_2.py
           requires:
             - execute-main
-      - publish-artifact:
-          requires:
+      - hold: 
+          type: approval
+          requires: 
             - execute-test-1
             - execute-test-2
+      - publish-artifact:
+          requires:
+            - hold
           
 
       
