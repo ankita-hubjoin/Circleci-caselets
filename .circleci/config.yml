@@ -1,17 +1,27 @@
 version: 2.1
 
 jobs:
-  hello-job:
+  execute-main:
     docker:
-      - image: python # the primary container, where your job's commands are run
-        auth:
-          username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
+      - image: python 
     steps:
-      - checkout # check out the code in the project directory
-      - run: echo "hello world" # run the `echo` command
+      - checkout 
+      - run: python billing_system.py 
+  execute-test:
+    docker:
+      - image: python 
+    parameters:
+      test-file: 
+        type: string    
+    steps:
+      - checkout 
+      - run: python << parameters.test-file >>    
 
 workflows:
-  my-workflow:
+  first-workflow:
     jobs:
-      - hello-job
+      - execute-main 
+      - execute-test: 
+          test-file: test_billing_system_1.py
+      - execute-test: 
+          test-file: test_billing_system_2.py
