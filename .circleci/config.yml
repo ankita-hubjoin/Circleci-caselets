@@ -19,10 +19,11 @@ jobs:
   publish-artifact:
     docker:
       - image: python 
+    working_directory: /tmp
     steps:
       - checkout 
       - store_artifacts:
-          path: billing_system.py
+          path: /tmp/billing_system.py
           destination: billing_system.py
 
 workflows:
