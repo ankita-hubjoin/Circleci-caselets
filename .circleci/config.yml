@@ -40,7 +40,6 @@ workflows:
           requires:
             - execute-main
       - hold: 
-          name: approve
           type: approval
           requires: 
             - execute-test-1
