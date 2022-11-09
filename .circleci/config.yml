@@ -20,6 +20,7 @@ jobs:
     docker:
       - image: python 
     steps:
+      - checkout 
       - store_artifacts:
           path: .
 
