@@ -3,13 +3,17 @@ version: 2.1
 jobs:
   execute-main:
     docker:
-      - image: python 
+      - image: python:3.9.15
     steps:
       - checkout 
-      - run: python3 billing_system.py 
+      - run: |
+          python3 -m venv venv
+          . venv/bin/activate
+          pip install -r requirements.txt
+          python3 billing_system.py 
   execute-test:
     docker:
-      - image: python 
+      - image: python:3.9.15
     parameters:
       test-file: 
         type: string    
@@ -18,7 +22,7 @@ jobs:
       - run: python3 << parameters.test-file >>
   publish-artifact:
     docker:
-      - image: python 
+      - image: python:3.9.15
     steps:
       - checkout 
       - run: tar -cvzf /tmp/first-artifact.tar .
@@ -26,7 +30,7 @@ jobs:
           path: /tmp/first-artifact.tar
   execute-main-cache:
     docker:
-      - image: python 
+      - image: python:3.9.15
     steps: 
       - checkout 
       - restore_cache: 
@@ -56,18 +60,18 @@ workflows:
           test-file: test_billing_system_2.py
           requires:
             - execute-main
-      - hold: 
+      - approval: 
           type: approval
           requires: 
             - execute-test-1
             - execute-test-2
       - publish-artifact:
           requires:
-            - hold
+            - approval
   second-workflow:
     triggers:
       - schedule:
-          cron: "*/2 * * * *"
+          cron: "0 17 * * * *"
           filters:
             branches:
               only: skhot_caselet
@@ -83,13 +87,13 @@ workflows:
           test-file: test_billing_system_2.py
           requires:
             - execute-test-1
-      - hold: 
+      - approval: 
           type: approval
           requires:
             - execute-test-2
       - publish-artifact:
           requires:
-            - hold
+            - approval
       
           
 
