@@ -28,17 +28,20 @@ workflows:
     jobs:
       - execute-main 
       - execute-test: 
+          name: "execute-test-1"
           test-file: test_billing_system_1.py
           requires:
             - execute-main
       - execute-test: 
+          name: "execute-test-2"
           test-file: test_billing_system_2.py
           requires:
             - execute-main
       - publish-artifact:
           type: approval
           requires:
-            - execute-test
+            - execute-test-1
+            - execute-test-2
           
 
       
