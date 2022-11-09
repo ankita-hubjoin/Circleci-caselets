@@ -6,7 +6,7 @@ jobs:
       - image: python 
     steps:
       - checkout 
-      - run: python billing_system.py 
+      - run: python3 billing_system.py 
   execute-test:
     docker:
       - image: python 
@@ -15,7 +15,7 @@ jobs:
         type: string    
     steps:
       - checkout 
-      - run: python << parameters.test-file >>
+      - run: python3 << parameters.test-file >>
   publish-artifact:
     docker:
       - image: python 
@@ -24,6 +24,23 @@ jobs:
       - run: tar -cvzf /tmp/first-artifact.tar .
       - store_artifacts:
           path: /tmp/first-artifact.tar
+  execute-main-cache:
+    docker:
+      - image: python 
+    steps: 
+      - checkout 
+      - restore_cache: 
+          key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
+      - run: # install and activate virtual environment with pip
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+            python3 billing_system.py
+      - save_cache: # ** special step to save dependency cache **
+          key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
+          paths:
+            - "venv"
 
 workflows:
   first-workflow:
@@ -47,6 +64,27 @@ workflows:
       - publish-artifact:
           requires:
             - hold
+  second-workflow:
+    jobs:
+      - execute-main-cache
+      - execute-test: 
+          name: "execute-test-1"
+          test-file: test_billing_system_1.py
+          requires:
+            - execute-main-cache
+      - execute-test: 
+          name: "execute-test-2"
+          test-file: test_billing_system_2.py
+          requires:
+            - execute-test-1
+      - hold: 
+          type: approval
+          requires:
+            - execute-test-2
+      - publish-artifact:
+          requires:
+            - hold
+      
           
 
       
