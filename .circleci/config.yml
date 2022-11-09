@@ -21,8 +21,9 @@ jobs:
       - image: python 
     steps:
       - checkout 
+      - run: tar -cvzf first-artifact.tar .
       - store_artifacts:
-          path: .
+          path: first-artifact.tar
 
 workflows:
   first-workflow:
@@ -39,6 +40,7 @@ workflows:
           requires:
             - execute-main
       - hold: 
+          name: approve
           type: approval
           requires: 
             - execute-test-1
