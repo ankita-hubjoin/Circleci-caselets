@@ -15,7 +15,13 @@ jobs:
         type: string    
     steps:
       - checkout 
-      - run: python << parameters.test-file >>    
+      - run: python << parameters.test-file >>
+  publish-artifact:
+    docker:
+      - image: python 
+    steps:
+      - store_artifacts:
+          path: .
 
 workflows:
   first-workflow:
@@ -23,11 +29,16 @@ workflows:
       - execute-main 
       - execute-test: 
           test-file: test_billing_system_1.py
-          type: approval
           requires:
             - execute-main
       - execute-test: 
           test-file: test_billing_system_2.py
-          type: approval
           requires:
             - execute-main
+      - publish-artifact:
+          type: approval
+          requires:
+            - execute-test
+          
+
+      
