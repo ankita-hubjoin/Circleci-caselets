@@ -65,6 +65,9 @@ workflows:
           requires:
             - hold
   second-workflow:
+    triggers:
+      - schedule:
+          cron: "2 * * * *"
     jobs:
       - execute-main-cache
       - execute-test: 
