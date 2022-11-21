@@ -1,0 +1,105 @@
+version: 2.1
+
+jobs:
+  build-job:
+    docker:
+      - image: python:3.9.15
+    steps:
+      - checkout
+      - run: 
+          name: creating virtual env for python
+          command: |
+          python3 -m venv venv
+          . venv/bin/activate
+       - run: 
+          name: installing packages and running the file
+          command: |
+          pip install -r requirements.txt
+          python3 billing_system.py
+  test-job:
+    docker:
+      - image: python:3.9.15
+    parameters:
+      test-file:
+        type: string
+    steps:
+      - checkout
+      - run: python3 << parameters.test-file >>
+  publish-artifact:
+    docker:
+      - image: python:3.9.15
+    steps:
+      - checkout
+      - run: tar -cvzf /tmp/first-artifact.tar .
+      - store_artifacts:
+          path: /tmp/first-artifact.tar
+  cache-job:
+    docker:
+      - image: python:3.9.15
+    steps:
+      - checkout
+      - restore_cache:
+          key: cache1-{{ .Branch }}-{{ checksum "requirements.txt" }}
+      - run: 
+          name: install and activate virtual environment with pip
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+      - run: 
+          name: installing packages and running the file
+          command: |
+            pip install -r requirements.txt
+            python3 billing_system.py
+      - save_cache:
+          key: cache1-{{ .Branch }}-{{ checksum "requirements.txt" }}
+          paths:
+            - "venv"
+
+workflows:
+  first-workflow:
+    jobs:
+      - build-job
+      - test-job:
+          name: "test-job-1"
+          test-file: test_billing_system_1.py
+          requires:
+            - build-job
+      - test-job:
+          name: "test-job-2"
+          test-file: test_billing_system_2.py
+          requires:
+            - build-job
+      - approval:
+          type: approval
+          requires:
+            - test-job-1
+            - test-job-2
+      - publish-artifact:
+          requires:
+            - approval
+  second-workflow:
+    triggers:
+      - schedule:
+          cron: "0 17 * * *"
+          filters:
+            branches:
+              only: arunoday_caselet
+    jobs:
+      - cache-job
+      - test-job:
+          name: "test-job-1"
+          test-file: test_billing_system_1.py
+          requires:
+            - cache-job
+      - test-job:
+          name: "test-job-2"
+          test-file: test_billing_system_2.py
+          requires:
+            - test-job-1
+      - approval:
+          type: approval
+          requires:
+            - test-job-2
+      - publish-artifact:
+          requires:
+            - approval
