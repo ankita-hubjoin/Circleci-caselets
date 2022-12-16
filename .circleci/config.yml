@@ -1,0 +1,116 @@
+version: 2.1
+
+executors:
+  custom-executor:
+    docker:
+      - image: cimg/python:3.10.1
+
+commands: 
+  restore-cache-cmd:
+    steps:
+      - restore_cache:
+          keys: deps12-{{ .Branch }}-{{ checksum "requirements.txt" }}
+  save-cache-cmd:
+    steps:
+      - save_cache:
+          key: deps11-{{ .Branch }}-{{ checksum "requirements.txt" }}
+          paths:
+            - "venv"
+  install-enviornment:
+    steps:
+      - run:
+          name: install dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            python3 -m pip install --upgrade pip
+            pip install -r requirements.txt
+  build-cache:
+    steps:
+      - checkout
+      - restore-cache-cmd
+      - install-enviornment
+      - save-cache-cmd
+  build:
+    steps:
+      - checkout
+      - install-enviornment
+
+jobs:
+  run-main-job:
+    parameters:
+      build-parameter:
+        type: string
+        default: build
+    executor: custom-executor
+    steps:
+      - << parameters.build-parameter >>
+      - run:
+          name: main
+          command: python billing_system.py
+
+  run-test1:
+    executor: custom-executor
+    steps:
+      - checkout
+      - run:
+          name: Run Test1
+          command: python test_billing_system_1.py
+
+  run-test2:
+    executor: custom-executor
+    steps:
+      - checkout
+      - run:
+          name: Run Test2
+          command: python test_billing_system_2.py
+
+  store-job:
+    executor: custom-executor
+    steps:
+      - checkout
+      - run:
+          name: create artifact
+          command: tar -cvzf /tmp/artifact.tar .
+      - store_artifacts:
+          path: /tmp/artifact.tar
+
+workflows:
+  run-and-test-workflow1:
+    jobs:
+      - run-main-job:
+          build-parameter: 'build'
+      - run-test1:
+          type: approval
+          requires:
+            - run-main-job
+      - run-test2:
+          type: approval
+          requires:
+            - run-main-job
+      - store-job:
+          requires:
+            - run-test1
+            - run-test2
+  run-and-test-workflow2:
+    triggers:
+      - schedule:
+          cron: "0 17 * * *"
+          filters:
+            branches:
+              only:
+                - simmi_caselet
+    jobs:
+      - run-main-job:
+          build-parameter: 'build-cache'
+      - run-test1:
+          type: approval
+          requires:
+            - run-main-job
+      - run-test2:
+          type: approval
+          requires:
+            - run-test1
+      - store-job:
+          requires:
+            - run-test2
