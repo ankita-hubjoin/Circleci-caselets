@@ -86,7 +86,6 @@ workflows:
     triggers:
       - schedule:
           cron: "0 17 * * *"
-          timezone: "Asia/Kolkata"
           filters:
             branches:
               only:
