@@ -1,0 +1,108 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: cimg/python:3.11
+    steps:
+      - checkout
+      - run:
+          name: Build Step
+          command: |
+            python3 -m pip install --upgrade pip
+            pip install -r requirements.txt
+      - run:
+          name: Run server file
+          command: python3 billing_system.py
+
+  run-test-1:
+    docker:
+      - image: cimg/python:3.11
+    steps:
+      - checkout
+      - run:
+          name: Run Test 1 File
+          command: python3 test_billing_system_1.py
+
+  run-test-2:
+    docker:
+      - image: cimg/python:3.11
+    steps:
+      - checkout
+      - run:
+          name: Run Test 2 File
+          command: python3 test_billing_system_2.py
+
+  package-zip:
+    docker:
+      - image: cimg/python:3.11
+    steps:
+      - checkout
+      - run:
+          name: Package source files and zip
+          command: tar -cvzf /tmp/source.tar .
+      - store_artifacts:
+          path: /tmp/source.tar
+
+  build-cache:
+    docker:
+      - image: cimg/python:3.11
+    steps:
+      - checkout
+      - run:
+          name: Run main file
+          command: python billing_system.py
+      - run:
+          name: Create cache for python dependencies
+          command: |
+            mkdir -p $CIRCLE_ARTIFACTS/cache
+            pip freeze > requirements.txt
+            cp requirements.txt $CIRCLE_ARTIFACTS/cache/
+      - restore_cache:
+          keys:
+            - requirements.txt-{{ checksum "requirements.txt" }}
+
+workflows:
+  version: 2
+  build-test-approve:
+    jobs:
+      - build
+      - run-test-1:
+          requires:
+            - build
+      - run-test-2:
+          requires:
+            - build
+      - approval:
+          type: approval
+          requires:
+            - run-test-1
+            - run-test-2
+      - package-zip:
+          requires:
+            - approval
+
+  schedule-build-test-cache:
+    triggers:
+      - schedule:
+          cron: "0 17 * * *"
+          timezone: "Asia/Kolkata"
+          filters:
+            branches:
+              only:
+                - mehakDawra_caselet
+    jobs:
+      - build-cache
+      - run-test-1:
+          requires:
+            - build
+      - run-test-2:
+          requires:
+            - run-test-1
+      - approval:
+          type: approval
+          requires:
+            - run-test-2
+      - package-zip:
+          requires:
+            - approval
