@@ -49,18 +49,20 @@ jobs:
       - image: cimg/python:3.11
     steps:
       - checkout
+      - restore_cache:
+          name: Restore cache for python dependencies
+          keys: python-deps-{{ .Branch }}-{{ checksum "requirements.txt" }}
+      - run:
+          name: Build Step
+          command: |
+            python3 -m pip install --upgrade pip
+            pip install -r requirements.txt
       - run:
           name: Run main file
           command: python billing_system.py
-      - run:
-          name: Create cache for python dependencies
-          command: |
-            mkdir -p $CIRCLE_ARTIFACTS/cache
-            pip freeze > requirements.txt
-            cp requirements.txt $CIRCLE_ARTIFACTS/cache/
-      - restore_cache:
-          keys:
-            - requirements.txt-{{ checksum "requirements.txt" }}
+      - save_cache:
+          name: Save cache for python dependencies
+          key: python-deps-{{ .Branch }}-{{ checksum "requirements.txt" }}
 
 workflows:
   version: 2
@@ -85,7 +87,7 @@ workflows:
   schedule-build-test-cache:
     triggers:
       - schedule:
-          cron: "0 8 * * *"
+          cron: "25 8 * * *"
           filters:
             branches:
               only:
