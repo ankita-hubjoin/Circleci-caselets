@@ -51,18 +51,21 @@ jobs:
       - checkout
       - restore_cache:
           name: Restore cache for python dependencies
-          keys: python-deps-{{ .Branch }}-{{ checksum "requirements.txt" }}
+          keys: &deps1-cache deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
       - run:
-          name: Build Step
+          name: Install dependencies
           command: |
-            python3 -m pip install --upgrade pip
+            python3 -m venv venv
+            . venv/bin/activate
             pip install -r requirements.txt
       - run:
           name: Run main file
           command: python billing_system.py
       - save_cache:
           name: Save cache for python dependencies
-          key: python-deps-{{ .Branch }}-{{ checksum "requirements.txt" }}
+          key: *deps1-cache
+          paths:
+            - "venv"
 
 workflows:
   version: 2
@@ -87,7 +90,7 @@ workflows:
   schedule-build-test-cache:
     triggers:
       - schedule:
-          cron: "25 8 * * *"
+          cron: "32 8 * * *"
           filters:
             branches:
               only:
