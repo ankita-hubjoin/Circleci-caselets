@@ -90,7 +90,7 @@ workflows:
   schedule-build-test-cache:
     triggers:
       - schedule:
-          cron: "32 8 * * *"
+          cron: "30 11 * * *"
           filters:
             branches:
               only:
