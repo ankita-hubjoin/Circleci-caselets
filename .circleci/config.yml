@@ -95,7 +95,7 @@ workflows:
       - build-cache
       - run-test-1:
           requires:
-            - build
+            - build-cache
       - run-test-2:
           requires:
             - run-test-1
